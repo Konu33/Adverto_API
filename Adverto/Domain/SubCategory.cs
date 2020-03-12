@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Adverto.Domain
 {
-    public class Category
+    public class SubCategory
     {
         public Guid Id { get; set; }
+        public Category Category { get; set; }
         public string Name { get; set; }
-        public IList<SubCategory> SubCategories { get; set; }
-
+        public bool isCompany { get; set; }
     }
 }

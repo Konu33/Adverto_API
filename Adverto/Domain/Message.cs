@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Adverto.Domain
 {
-    public class Category
+    public class Message
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
-        public IList<SubCategory> SubCategories { get; set; }
-
+        public User User { get; set; }
+        public DateTime DateOfSend { get; set; }
+        public string Text { get; set; }
     }
 }
