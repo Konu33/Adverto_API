@@ -34,5 +34,18 @@ namespace Adverto.Routes
             public const string updateSubCategory = baseUrl + "/SubCategory/{subcategoryId}";
             public const string createSubCategory = baseUrl + "/createSubCategory";
         }
+        public static class User
+        {
+            public const string getUser = baseUrl + "/User/{userId}";
+            public const string getUsers = baseUrl + "/Users";
+            public const string removeUser = baseUrl + "/User/{userId}";
+            public const string createUser = baseUrl + "/CreateUser";
+            public const string updateUser = baseUrl + "/User/{userId}";
+        }
+        public static class Auth
+        {
+            public const string Login = baseUrl + "/Auth/Login";
+            public const string Register = baseUrl + "/Auth/Register";
+        }
     }
 }

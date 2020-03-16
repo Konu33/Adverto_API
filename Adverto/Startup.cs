@@ -1,9 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Adverto.Data;
+using Adverto.Options;
 using Adverto.Repositories;
+using Adverto.Repositories.AuthRepository;
+using Adverto.Repositories.CategoryRepository;
+using Adverto.Repositories.SubCategoryRepo;
+using Adverto.Repositories.UserRepository;
+using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,6 +21,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Adverto
 {
@@ -33,8 +42,29 @@ namespace Adverto
             services.AddDbContext<DataContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            var jwtSettings = new JwtSettings();
+            Configuration.Bind(nameof(jwtSettings), jwtSettings);
+            services.AddSingleton(jwtSettings);
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                                    .AddJwtBearer(options =>
+                                    {
+                                        options.TokenValidationParameters = new TokenValidationParameters
+                                        {
+                                            ValidateIssuerSigningKey = true,
+                                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secrect)),
+                                            ValidateIssuer = false,
+                                            ValidateAudience = false,
+
+                                        };
+                                    });
             services.AddScoped<IAdvertRepo, AdvertRepo>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<ICategoryRepo, CategoryRepo>();
+            services.AddScoped<ISubCatergoryRepo, SubCategoryRepo>();
+            services.AddScoped<IUserRepo, UserRepo>();
+            services.AddAutoMapper(typeof(Startup));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

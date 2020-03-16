@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Adverto.Repositories.SubCategoryRepo
 {
-    public class ISubCategoryRepo : ISubCatergoryRepo
+    public class SubCategoryRepo : ISubCatergoryRepo
     {
         private readonly DataContext _context;
-        public ISubCategoryRepo(DataContext context)
+        public SubCategoryRepo(DataContext context)
         {
             _context = context;
         }
