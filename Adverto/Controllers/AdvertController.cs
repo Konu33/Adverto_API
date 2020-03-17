@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Adverto.Domain;
 using Adverto.Repositories;
 using Adverto.Routes;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +14,7 @@ namespace Adverto.Controllers
 {
    
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AdvertController : ControllerBase
     {
 

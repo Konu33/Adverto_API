@@ -47,7 +47,7 @@ namespace Adverto.Controllers
             return NotFound();
         }
         [HttpPost(RoutesAPI.CategoryRoutes.addCategory)]
-        public async Task<IActionResult> addCategory([FromBody]Category category)
+        public async Task<IActionResult> AddCategory([FromBody]Category category)
         {
 
             category.Id = Guid.NewGuid();
@@ -63,7 +63,7 @@ namespace Adverto.Controllers
 
         }
         [HttpPut(RoutesAPI.CategoryRoutes.updateCategory)]
-        public async Task<IActionResult> updateCategory([FromBody]Category category,[FromRoute]Guid categoryId)
+        public async Task<IActionResult> UpdateCategory([FromBody]Category category,[FromRoute]Guid categoryId)
         {
             category.Id = categoryId;
 
