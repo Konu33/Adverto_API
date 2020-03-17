@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Adverto.Domain;
+using Adverto.Dto.AdvertDto;
 using Adverto.Repositories;
 using Adverto.Routes;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,34 +16,36 @@ namespace Adverto.Controllers
 {
    
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AdvertController : ControllerBase
     {
 
         private readonly IAdvertRepo _advertRepo;
-        public AdvertController(IAdvertRepo advertRepo)
+        private readonly IMapper _mapper;
+        public AdvertController(IAdvertRepo advertRepo,IMapper mapper)
         {
             _advertRepo = advertRepo;
+            _mapper = mapper;
         }
         [HttpGet(RoutesAPI.AdvertRoutes.GetAdverts)]
         public async Task<IActionResult> getAdverts()
         {
-           var adverts = await _advertRepo.getAdvertsAsync();
+           var adverts =  await _advertRepo.getAdvertsAsync();
 
-            return Ok(adverts);
+            return Ok(_mapper.Map<List<AdvertResponse>>(adverts));
         }
         [HttpGet(RoutesAPI.AdvertRoutes.GetAdvert)]
-        public async Task<IActionResult> getAdvert([FromRoute]Guid advertId)
+        public async Task<IActionResult> GetAdvert([FromRoute]Guid advertId)
         {
             var advert = await _advertRepo.getAdvertAsync(advertId);
 
             if (advert == null)
                 return NoContent();
 
-            return Ok(advert);
+            return Ok(_mapper.Map<AdvertResponse>(advert));
         }
         [HttpDelete(RoutesAPI.AdvertRoutes.RemoveAdvert)]
-        public async Task<IActionResult> removeAdvert([FromRoute]Guid advertId)
+        public async Task<IActionResult> RemoveAdvert([FromRoute]Guid advertId)
         {
             var result = await _advertRepo.deleteAdvertAsync(advertId);
 
@@ -52,36 +56,38 @@ namespace Adverto.Controllers
             return Ok();
         }
         [HttpPost(RoutesAPI.AdvertRoutes.addAdvert)]
-        public async Task<IActionResult> addAdvert([FromBody] Advert advert)
+        public async Task<IActionResult> AddAdvert([FromBody] AdvertRequest request)
         {
 
+            var advert = _mapper.Map<Advert>(request);
             advert.Id = Guid.NewGuid();
+          
 
-          var result =  await _advertRepo.addAdvertAsync(advert);
+           await _advertRepo.addAdvertAsync(advert);
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var location = baseUrl + RoutesAPI.AdvertRoutes.GetAdvert.Replace("{advertId}", advert.Id.ToString());
 
            
-                return Created(location,advert);      
+                return Created(location,_mapper.Map<AdvertResponse>(advert));      
         }
         [HttpPut(RoutesAPI.AdvertRoutes.updateAdvert)]
-        public async Task<IActionResult>  updateAdvert([FromRoute]Guid advertId,[FromBody]Advert advert)
+        public async Task<IActionResult>  UpdateAdvert([FromRoute]Guid advertId,[FromBody]AdvertRequest request)
         {
             var advertToUpdate = await _advertRepo.getAdvertAsync(advertId);
 
-            advertToUpdate.Category = advert.Category;
-            advertToUpdate.Description = advert.Description;
-            advertToUpdate.Location = advert.Location;
-            advertToUpdate.Name = advert.Name;
-            advertToUpdate.Prize = advert.Prize;
+            
+            advertToUpdate.Description = request.Description;
+            advertToUpdate.Location = request.Location;
+            advertToUpdate.Name = request.Name;
+            advertToUpdate.Prize =request.Prize;
            
 
             var status = await _advertRepo.updateAdvertAsync(advertToUpdate);
 
 
             if (status)
-                return Ok(advertToUpdate);
+                return Ok(_mapper.Map<AdvertResponse>(advertToUpdate));
 
 
 

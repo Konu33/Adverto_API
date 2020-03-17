@@ -43,7 +43,7 @@ namespace Adverto.Repositories.UserRepository
 
         public async Task<List<User>> getUsers()
         {
-            return (await _dataContext.Users.ToListAsync());
+            return (await _dataContext.Users.Include(c=>c.Adverts).ToListAsync());
         }
 
         public async Task<bool> removeUserAsync(Guid id)

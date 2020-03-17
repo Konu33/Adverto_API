@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,7 +15,11 @@ namespace Adverto.Domain
       
         public string Location { get; set; }
         public virtual Category Category { get; set; }
-        //zdjecia tutaj
-      
+        [ForeignKey("Category")]
+        public Guid CategoryId { get; set; }
+        public virtual User User { get; set; }
+        [ForeignKey("User")]
+        public Guid UserId { get; set; }
+
     }
 }

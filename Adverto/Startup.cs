@@ -76,7 +76,7 @@ namespace Adverto
             }
 
             app.UseHttpsRedirection();
-
+            
             app.UseRouting();
 
             app.UseAuthorization();

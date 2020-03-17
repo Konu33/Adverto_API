@@ -55,7 +55,8 @@ namespace Adverto.Controllers
         [HttpGet(RoutesAPI.User.getUsers)]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await _repo.getUsers();
+            var userToMap = await _repo.getUsers();
+            var users = _mapper.Map<List<UserResponse>>(userToMap);
 
             if (users != null)
                 return Ok(users);

@@ -1,6 +1,8 @@
 ﻿using Adverto.Domain;
+using Adverto.Dto.SubCategoriesDto;
 using Adverto.Repositories.SubCategoryRepo;
 using Adverto.Routes;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,30 +15,40 @@ namespace Adverto.Controllers
     public class SubCategoryController : ControllerBase
     {
         private readonly ISubCatergoryRepo _repo;
-        public SubCategoryController(ISubCatergoryRepo repo)
+        private readonly IMapper _mapper;
+        public SubCategoryController(ISubCatergoryRepo repo,IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
         [HttpGet(RoutesAPI.SubCategory.getSubCategories)]
-        public async Task<IActionResult> getCategories()
+        public async Task<IActionResult> GetCategories()
         {
-            return Ok(await _repo.getSubCategoriesAsync());
+            var subCat = await _repo.getSubCategoriesAsync();
+            var subCategories = _mapper.Map<List<SubCategoryResponse>>(subCat);
+
+            return Ok(subCategories);
         }
         [HttpGet(RoutesAPI.SubCategory.getSubCategory)]
-        public async Task<IActionResult> getCategory([FromRoute]Guid subcategoryId)
+        public async Task<IActionResult> getCategory([FromRoute]Guid subcategoryId) 
         {
-            var subCategory = await _repo.getSubCategoryAsync(subcategoryId);
+            var subCat = await _repo.getSubCategoryAsync(subcategoryId);
+            var subCategory =_mapper.Map<SubCategoryResponse>(subCat);
 
             if(subCategory != null)
             {
-                return Ok(subcategoryId);
+                return Ok(subCategory);
             }
 
             return BadRequest();
         }
         [HttpPost(RoutesAPI.SubCategory.createSubCategory)]
-        public async Task<IActionResult> addSubCategory([FromBody]SubCategory subCategory)
+        public async Task<IActionResult> AddSubCategory([FromBody]SubCategoryRequest request)
         {
+
+            var subCategory = _mapper.Map<SubCategory>(request);
+            subCategory.Id = Guid.NewGuid();
+
             var result = await _repo.addSubCategoryAsync(subCategory);
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
@@ -45,13 +57,13 @@ namespace Adverto.Controllers
 
             if (result)
             {
-                return Created(location, subCategory);
+                return Created(location,_mapper.Map<SubCategoryResponse>(subCategory));
             }
             return BadRequest();
 
         }
         [HttpDelete(RoutesAPI.SubCategory.removeSubCategory)]
-        public async Task<IActionResult> removeSubCategory([FromRoute]Guid subcategoryId)
+        public async Task<IActionResult> RemoveSubCategory([FromRoute]Guid subcategoryId)
         {
             var result = await _repo.removeSubCategoryAsync(subcategoryId);
 
@@ -63,9 +75,12 @@ namespace Adverto.Controllers
             return NotFound();
         }
         [HttpPut(RoutesAPI.SubCategory.updateSubCategory)]
-        public async Task<IActionResult> updateSubCategory([FromBody]SubCategory subCategory,[FromRoute]Guid subcategoryId)
+        public async Task<IActionResult> UpdateSubCategory([FromBody]SubCategoryRequest request,[FromRoute]Guid subcategoryId)
         {
-            subCategory.Id = subcategoryId;
+
+            var subCategory = await _repo.getSubCategoryAsync(subcategoryId);
+            subCategory.Name = request.Name;
+           
 
 
             var result = await _repo.updateSubCategoryAsync(subCategory);
