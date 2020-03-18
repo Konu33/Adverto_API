@@ -32,7 +32,7 @@ namespace Adverto.Repositories.CategoryRepository
 
         public async Task<List<Category>> getCategoriesAsync()
         {
-            return  await _context.Categories.ToListAsync();
+            return  await _context.Categories.Include(c=>c.SubCategories).ToListAsync();
         }
 
         public async Task<Category> getCategoryAsync(Guid id)

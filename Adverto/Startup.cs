@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Adverto.Data;
+using Adverto.Filters;
 using Adverto.Options;
 using Adverto.Repositories;
 using Adverto.Repositories.AuthRepository;
@@ -11,6 +12,7 @@ using Adverto.Repositories.CategoryRepository;
 using Adverto.Repositories.SubCategoryRepo;
 using Adverto.Repositories.UserRepository;
 using AutoMapper;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +43,10 @@ namespace Adverto
 
             services.AddDbContext<DataContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddMvc(opt => opt.Filters.Add<ValidationFilter>())
+                .AddFluentValidation(mvc => mvc.RegisterValidatorsFromAssemblyContaining<Startup>());
+                
 
             var jwtSettings = new JwtSettings();
             Configuration.Bind(nameof(jwtSettings), jwtSettings);
