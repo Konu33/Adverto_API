@@ -4,6 +4,7 @@ using Adverto.Repositories;
 using Adverto.Routes;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,9 +45,10 @@ namespace Adverto.Controllers
 
             var updated = await _repo.updateUserAsync(user);
 
-
+             
             if (updated)
                 return Ok(_mapper.Map<UserResponse>(user));
+            
 
 
             return NotFound();

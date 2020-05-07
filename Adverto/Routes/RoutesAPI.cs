@@ -47,5 +47,13 @@ namespace Adverto.Routes
             public const string Login = baseUrl + "/Auth/Login";
             public const string Register = baseUrl + "/Auth/Register";
         }
+        public static class Report
+        {
+            public const string Create = baseUrl + "/ReportCreate";
+            public const string GetReport = baseUrl + "/Report/{reportId}";
+            public const string GetReports = baseUrl + "/Reports";
+            public const string RemoveReport = baseUrl + "/Report/{reportId}";
+            public const string UpdateReport = baseUrl + "/UpdateReport/{reportId}";
+        }
     }
 }

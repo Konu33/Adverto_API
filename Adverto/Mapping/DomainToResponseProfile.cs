@@ -17,7 +17,7 @@ namespace Adverto.Mapping
         {
             
             CreateMap<User, UserResponse>().ForMember(dest => dest.Adverts, opt =>
-                 opt.MapFrom(src => src.Adverts.Select(c => new AdvertResponse { Description = c.Description, Location = c.Location, Name = c.Name, Prize = c.Prize, CategoryId = c.CategoryId })));
+                 opt.MapFrom(src => src.Adverts.Select(c => new AdvertResponse {Id=c.Id,UserId = c.UserId,ImageByte= c.ImageByte, Description = c.Description, Location = c.Location, Name = c.Name, Prize = c.Prize, CategoryId = c.CategoryId })));
            
             CreateMap<Category, CategoryResponse>()
                 .ForMember(dest=>dest.SubCategories,opt =>

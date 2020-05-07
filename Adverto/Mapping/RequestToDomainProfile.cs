@@ -20,7 +20,9 @@ namespace Adverto.Mapping
                 opt.MapFrom(src => src.Adverts.Select(c=> new Advert() { Description = c.Description, Location = c.Location, Name= c.Name, Prize =c.Prize, CategoryId = c.CategoryId })));
             CreateMap<AdvertRequest, Advert>()
                 .ForMember(dest => dest.CategoryId,opt=>
-                opt.MapFrom(src => src.CategoryId));
+                opt.MapFrom(src => src.CategoryId))
+                .ForMember(dest => dest.PhotoUrl,opt=>
+                opt.MapFrom(src => src.file.FileName));
             CreateMap<CategoryRequest, Category>()
                 .ForMember(dest => dest.SubCategories,opt =>
                 opt.MapFrom(src =>src.SubCategories.Select(c=> new SubCategory() {  Name = c.Name , CategoryId =c.CategoryId})));

@@ -41,6 +41,7 @@ namespace Adverto.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier,userToLogin.Id.ToString()),
                 new Claim(ClaimTypes.Name,user.Name),
+                new Claim(ClaimTypes.Role,userToLogin.isAdmin.ToString())
             };
 
             var jwtSettings = new JwtSettings();

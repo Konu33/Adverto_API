@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace Adverto.Dto.UserDto
 {
     public class UserResponse
-    {
+    {   
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Surrname { get; set; }
         public string Email { get; set; }

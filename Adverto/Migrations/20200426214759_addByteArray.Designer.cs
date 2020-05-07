@@ -4,14 +4,16 @@ using Adverto.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Adverto.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200426214759_addByteArray")]
+    partial class addByteArray
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,28 +96,6 @@ namespace Adverto.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("Adverto.Domain.Report", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AdvertId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsCheckedByAdmin")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdvertId");
-
-                    b.ToTable("Reports");
-                });
-
             modelBuilder.Entity("Adverto.Domain.SubCategory", b =>
                 {
                     b.Property<Guid>("Id")
@@ -187,15 +167,6 @@ namespace Adverto.Migrations
                     b.HasOne("Adverto.Domain.User", "User")
                         .WithMany("Messages")
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Adverto.Domain.Report", b =>
-                {
-                    b.HasOne("Adverto.Domain.Advert", "Advert")
-                        .WithMany()
-                        .HasForeignKey("AdvertId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Adverto.Domain.SubCategory", b =>

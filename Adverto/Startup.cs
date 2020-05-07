@@ -9,6 +9,7 @@ using Adverto.Options;
 using Adverto.Repositories;
 using Adverto.Repositories.AuthRepository;
 using Adverto.Repositories.CategoryRepository;
+using Adverto.Repositories.ReportRepository;
 using Adverto.Repositories.SubCategoryRepo;
 using Adverto.Repositories.UserRepository;
 using AutoMapper;
@@ -29,6 +30,7 @@ namespace Adverto
 {
     public class Startup
     {
+      
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -46,7 +48,7 @@ namespace Adverto
 
             services.AddMvc(opt => opt.Filters.Add<ValidationFilter>())
                 .AddFluentValidation(mvc => mvc.RegisterValidatorsFromAssemblyContaining<Startup>());
-                
+            services.AddCors();
 
             var jwtSettings = new JwtSettings();
             Configuration.Bind(nameof(jwtSettings), jwtSettings);
@@ -64,9 +66,11 @@ namespace Adverto
 
                                         };
                                     });
+           
             services.AddScoped<IAdvertRepo, AdvertRepo>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<ICategoryRepo, CategoryRepo>();
+            services.AddScoped<IReportRepo, ReportRepo>();
             services.AddScoped<ISubCatergoryRepo, SubCategoryRepo>();
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddAutoMapper(typeof(Startup));
@@ -80,12 +84,17 @@ namespace Adverto
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
             
+            app.UseHttpsRedirection();
+            app.UseCors(builder => builder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+   );
             app.UseRouting();
-
+           
             app.UseAuthorization();
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
