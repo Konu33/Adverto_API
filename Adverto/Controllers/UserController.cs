@@ -3,6 +3,8 @@ using Adverto.Dto.UserDto;
 using Adverto.Repositories;
 using Adverto.Routes;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient.Server;
 using System;
@@ -13,6 +15,7 @@ using System.Threading.Tasks;
 namespace Adverto.Controllers
 {
     [ApiController]
+   
     public class UserController : ControllerBase
     {
         private readonly IUserRepo _repo;
@@ -33,6 +36,7 @@ namespace Adverto.Controllers
 
             return NotFound();
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut(RoutesAPI.User.updateUser)]
         public async Task<IActionResult> UpdateUser([FromBody]UserRequest request,[FromRoute]Guid userId )
         {
@@ -66,6 +70,7 @@ namespace Adverto.Controllers
             return NotFound();
 
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost(RoutesAPI.User.createUser)]
         public async Task<IActionResult> CreateUser([FromBody]UserRequest request)
         {
@@ -84,6 +89,7 @@ namespace Adverto.Controllers
             return Created(location,_mapper.Map<UserResponse>(userToCreate));
 
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete(RoutesAPI.User.removeUser)]
         public async Task<IActionResult> DeleteUser([FromRoute]Guid userId)
         {

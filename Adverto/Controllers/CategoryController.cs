@@ -3,6 +3,8 @@ using Adverto.Dto.Category;
 using Adverto.Repositories.CategoryRepository;
 using Adverto.Routes;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,7 @@ using System.Threading.Tasks;
 namespace Adverto.Controllers
 {
     [ApiController]
+    
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryRepo _repo;
@@ -41,6 +44,7 @@ namespace Adverto.Controllers
 
             return Ok(categories);
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete(RoutesAPI.CategoryRoutes.removeCategory)]
         public async Task<IActionResult> RemoveCategory([FromRoute] Guid categoryId)
         {
@@ -54,6 +58,7 @@ namespace Adverto.Controllers
 
             return NotFound();
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost(RoutesAPI.CategoryRoutes.addCategory)]
         public async Task<IActionResult> AddCategory([FromBody]CategoryRequest request)
         {
@@ -77,6 +82,7 @@ namespace Adverto.Controllers
             return NotFound();
 
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut(RoutesAPI.CategoryRoutes.updateCategory)]
         public async Task<IActionResult> UpdateCategory([FromBody]CategoryRequest request,[FromRoute]Guid categoryId)
         {

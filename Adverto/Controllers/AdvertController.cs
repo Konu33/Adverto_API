@@ -18,7 +18,7 @@ namespace Adverto.Controllers
 {
    
     [ApiController]
-  //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class AdvertController : ControllerBase
     {
 
@@ -31,6 +31,7 @@ namespace Adverto.Controllers
             _advertRepo = advertRepo;
             _mapper = mapper;
         }
+        
         [HttpGet(RoutesAPI.AdvertRoutes.GetAdverts)]
         public async Task<IActionResult> getAdverts()
         {
@@ -48,6 +49,7 @@ namespace Adverto.Controllers
 
             return Ok(_mapper.Map<AdvertResponse>(advert));
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete(RoutesAPI.AdvertRoutes.RemoveAdvert)]
         public async Task<IActionResult> RemoveAdvert([FromRoute]Guid advertId)
         {
@@ -59,6 +61,7 @@ namespace Adverto.Controllers
 
             return Ok();
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost(RoutesAPI.AdvertRoutes.addAdvert)]
         public async Task<IActionResult> AddAdvert([FromForm]AdvertRequest request)
         {
@@ -119,6 +122,7 @@ namespace Adverto.Controllers
 
             return Created(location, _mapper.Map<AdvertResponse>(advert));
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut(RoutesAPI.AdvertRoutes.updateAdvert)]
         public async Task<IActionResult>  UpdateAdvert([FromRoute]Guid advertId,[FromForm]AdvertRequest request)
         {
